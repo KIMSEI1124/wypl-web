@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import tw from 'twin.macro';
 
 const Container = styled.div`
-  ${tw`
+    ${tw`
         flex
         justify-center
         items-center
@@ -13,7 +13,7 @@ const Container = styled.div`
 `;
 
 const Wrapper = styled.div`
-  ${tw`
+    ${tw`
         flex
         justify-center
         items-center
@@ -28,7 +28,7 @@ const Wrapper = styled.div`
 `;
 
 const ProfileImage = styled.img`
-  ${tw`
+    ${tw`
         w-24
         h-24
 
@@ -37,7 +37,7 @@ const ProfileImage = styled.img`
 `;
 
 const IconWrapper = styled.div`
-  ${tw`
+    ${tw`
       fixed
 
       flex
@@ -58,7 +58,7 @@ const IconWrapper = styled.div`
 `;
 
 const InputImage = styled.input`
-  ${tw`
+    ${tw`
     fixed
 
     h-8
