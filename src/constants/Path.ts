@@ -24,6 +24,9 @@ const API_PATH = {
     MOCK_ISSUE_TOKENS: '/auth/v1/sign-in/mock',
     LOGOUT: '/auth/v1/logout',
   },
+  CALENDAR: {
+    BASE: '/calendar/v1/calendars',
+  },
   MEMBER: {
     BASE: '/member/v1/members',
     COLOR: '/member/v1/members/colors',

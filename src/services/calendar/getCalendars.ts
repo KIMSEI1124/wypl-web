@@ -1,7 +1,12 @@
+import { API_PATH } from '@/constants/Path.ts';
 import { axiosWithAccessToken } from '@/services/axios';
 
-export const getCalendars = async (type: 'DAY' | 'WEEK' | 'MONTH', params: string) => {
-  const { data } = await axiosWithAccessToken.get<CalendarsResponse>(`/calendar/v1/calendars/${type}`, { params });
+export interface GetCalendarsParams {
+  date: string;
+}
 
-  return data;
+export const getCalendars = async (calendarType: CalenderType, params: GetCalendarsParams) => {
+  const { data } = await axiosWithAccessToken.get<BaseResponse<CalendarsResponse>>(`${API_PATH.CALENDAR.BASE}/${calendarType}`, { params });
+
+  return data.body;
 };

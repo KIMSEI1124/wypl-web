@@ -4,9 +4,8 @@ import * as S from './DailyCalendar.styled';
 
 import { LabelColorsType } from '@/assets/styles/colorThemes';
 import NoContentAnimation from '@/components/animation/NoContent';
-import useLoading from '@/hooks/useLoading';
-import { getCalendars } from '@/services/calendar/getCalendars';
-import getGroupCalendars from '@/services/calendar/getGroupCalendars';
+import { getCalendars, GetCalendarsParams } from '@/services/calendar/getCalendars';
+import { getGroupCalendars } from '@/services/calendar/getGroupCalendars';
 import useDateStore from '@/stores/DateStore';
 import useMemberStore from '@/stores/MemberStore';
 import { dateToString, getTime } from '@/utils/DateUtils';
@@ -27,23 +26,20 @@ function DailyCalendar({
                          setUpdateFalse,
                          handleSkedClick,
                        }: DailyProps) {
-  const { canStartLoading, endLoading } = useLoading();
   const { selectedDate, selectedLabels } = useDateStore();
   const [originSked, setOriginSked] = useState<Array<CalendarSchedule>>([]);
   const [schedules, setSchedules] = useState<Array<CalendarSchedule>>([]);
   const { mainColor } = useMemberStore();
 
   const updateInfo = useCallback(async () => {
-    if (canStartLoading()) {
-      return;
-    }
     if (category === 'MEMBER') {
+      const params: GetCalendarsParams = {
+        date: dateToString(selectedDate),
+      };
       const response = await getCalendars(
         'DAY',
-        dateToString(selectedDate),
-      ).finally(() => {
-        endLoading();
-      });
+        params,
+      );
       if (response) {
         setOriginSked(response.schedules);
       }
@@ -52,9 +48,7 @@ function DailyCalendar({
         'DAY',
         groupId,
         dateToString(selectedDate),
-      ).finally(() => {
-        endLoading();
-      });
+      );
       if (response) {
         setOriginSked(response.schedules);
       }

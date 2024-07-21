@@ -5,8 +5,8 @@ import { Chevrons } from '../DatePicker.styled';
 
 import ChevronLeft from '@/assets/icons/chevronLeft.svg';
 import ChevronRight from '@/assets/icons/chevronRight.svg';
-import { getCalendars } from '@/services/calendar/getCalendars';
-import getGroupCalendars from '@/services/calendar/getGroupCalendars';
+import { getCalendars, GetCalendarsParams } from '@/services/calendar/getCalendars';
+import { getGroupCalendars } from '@/services/calendar/getGroupCalendars';
 import useDateStore from '@/stores/DateStore';
 import {
   isSameDay,
@@ -42,6 +42,7 @@ function MonthlyCalender({
     }
     return init;
   };
+
   const { selectedDate, setSelectedDate, selectedLabels } = useDateStore();
   const [originSked, setOriginSked] = useState<Array<CalendarSchedule>>([]);
   const [monthSchedules, setMonthSchedules] =
@@ -75,12 +76,14 @@ function MonthlyCalender({
   };
 
   const updateInfo = useCallback(async () => {
+    const params: GetCalendarsParams = {
+      date: dateToString(selectedDate),
+    };
     if (category === 'MEMBER') {
       const response = await getCalendars(
         'MONTH',
-        dateToString(selectedDate),
+        params,
       );
-
       if (response) {
         setOriginSked(response.schedules);
       }
@@ -101,7 +104,7 @@ function MonthlyCalender({
   }, [groupId]);
 
   const filteredSked = useCallback(() => {
-    if (firstDay) {
+    if (firstDay && originSked) {
       const init: Array<DateSchedule> = createInit();
 
       for (const sked of labelFilter(originSked, selectedLabels)) {

@@ -10,9 +10,8 @@ import { Chevrons } from '../DatePicker.styled';
 
 import ChevronLeft from '@/assets/icons/chevronLeft.svg';
 import ChevronRight from '@/assets/icons/chevronRight.svg';
-import useLoading from '@/hooks/useLoading';
-import { getCalendars } from '@/services/calendar/getCalendars';
-import getGroupCalendars from '@/services/calendar/getGroupCalendars';
+import { getCalendars, GetCalendarsParams } from '@/services/calendar/getCalendars';
+import { getGroupCalendars } from '@/services/calendar/getGroupCalendars';
 import useDateStore from '@/stores/DateStore';
 import {
   dateToString,
@@ -45,7 +44,6 @@ function WeeklyCalendar({
                           setUpdateFalse,
                           handleSkedClick,
                         }: WeeklyProps) {
-  const { canStartLoading, endLoading } = useLoading();
   const { selectedDate, setSelectedDate, selectedLabels } = useDateStore();
   const [firstDay, setFirstDay] = useState<Date | null>(null);
   const [height, setHeight] = useState<number>(0);
@@ -74,16 +72,15 @@ function WeeklyCalendar({
   };
 
   const updateInfo = useCallback(async () => {
-    if (canStartLoading()) {
-      return;
-    }
+
     if (category === 'MEMBER') {
+      const params: GetCalendarsParams = {
+        date: dateToString(selectedDate),
+      };
       const response = await getCalendars(
         'WEEK',
-        dateToString(selectedDate),
-      ).finally(() => {
-        endLoading();
-      });
+        params,
+      );
 
       if (response) {
         setOriginSked(response.schedules);
@@ -93,9 +90,7 @@ function WeeklyCalendar({
         'WEEK',
         groupId,
         dateToString(selectedDate),
-      ).finally(() => {
-        endLoading();
-      });
+      );
       if (response) {
         setOriginSked(response.schedules);
       }
