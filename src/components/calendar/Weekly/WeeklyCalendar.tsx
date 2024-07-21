@@ -11,7 +11,7 @@ import { Chevrons } from '../DatePicker.styled';
 import ChevronLeft from '@/assets/icons/chevronLeft.svg';
 import ChevronRight from '@/assets/icons/chevronRight.svg';
 import { getCalendars, GetCalendarsParams } from '@/services/calendar/getCalendars';
-import { getGroupCalendars } from '@/services/calendar/getGroupCalendars';
+import { getGroupCalendars, GetGroupCalendarsParams } from '@/services/calendar/getGroupCalendars';
 import useDateStore from '@/stores/DateStore';
 import {
   dateToString,
@@ -72,25 +72,22 @@ function WeeklyCalendar({
   };
 
   const updateInfo = useCallback(async () => {
-
     if (category === 'MEMBER') {
       const params: GetCalendarsParams = {
+        calendarType: 'WEEK',
         date: dateToString(selectedDate),
       };
-      const response = await getCalendars(
-        'WEEK',
-        params,
-      );
-
+      const response = await getCalendars(params);
       if (response) {
         setOriginSked(response.schedules);
       }
     } else if (category === 'GROUP' && groupId) {
-      const response = await getGroupCalendars(
-        'WEEK',
+      const params: GetGroupCalendarsParams = {
+        calendarType: 'WEEK',
         groupId,
-        dateToString(selectedDate),
-      );
+        date: dateToString(selectedDate),
+      };
+      const response = await getGroupCalendars(params);
       if (response) {
         setOriginSked(response.schedules);
       }

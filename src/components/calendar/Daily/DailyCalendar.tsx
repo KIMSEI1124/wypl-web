@@ -5,7 +5,7 @@ import * as S from './DailyCalendar.styled';
 import { LabelColorsType } from '@/assets/styles/colorThemes';
 import NoContentAnimation from '@/components/animation/NoContent';
 import { getCalendars, GetCalendarsParams } from '@/services/calendar/getCalendars';
-import { getGroupCalendars } from '@/services/calendar/getGroupCalendars';
+import { getGroupCalendars, GetGroupCalendarsParams } from '@/services/calendar/getGroupCalendars';
 import useDateStore from '@/stores/DateStore';
 import useMemberStore from '@/stores/MemberStore';
 import { dateToString, getTime } from '@/utils/DateUtils';
@@ -34,21 +34,20 @@ function DailyCalendar({
   const updateInfo = useCallback(async () => {
     if (category === 'MEMBER') {
       const params: GetCalendarsParams = {
+        calendarType: 'DAY',
         date: dateToString(selectedDate),
       };
-      const response = await getCalendars(
-        'DAY',
-        params,
-      );
+      const response = await getCalendars(params);
       if (response) {
         setOriginSked(response.schedules);
       }
     } else if (category === 'GROUP' && groupId) {
-      const response = await getGroupCalendars(
-        'DAY',
+      const params: GetGroupCalendarsParams = {
+        calendarType: 'DAY',
         groupId,
-        dateToString(selectedDate),
-      );
+        date: dateToString(selectedDate),
+      };
+      const response = await getGroupCalendars(params);
       if (response) {
         setOriginSked(response.schedules);
       }

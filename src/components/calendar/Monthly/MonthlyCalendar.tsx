@@ -6,7 +6,7 @@ import { Chevrons } from '../DatePicker.styled';
 import ChevronLeft from '@/assets/icons/chevronLeft.svg';
 import ChevronRight from '@/assets/icons/chevronRight.svg';
 import { getCalendars, GetCalendarsParams } from '@/services/calendar/getCalendars';
-import { getGroupCalendars } from '@/services/calendar/getGroupCalendars';
+import { getGroupCalendars, GetGroupCalendarsParams } from '@/services/calendar/getGroupCalendars';
 import useDateStore from '@/stores/DateStore';
 import {
   isSameDay,
@@ -76,23 +76,22 @@ function MonthlyCalender({
   };
 
   const updateInfo = useCallback(async () => {
-    const params: GetCalendarsParams = {
-      date: dateToString(selectedDate),
-    };
     if (category === 'MEMBER') {
-      const response = await getCalendars(
-        'MONTH',
-        params,
-      );
+      const params: GetCalendarsParams = {
+        calendarType: 'MONTH',
+        date: dateToString(selectedDate),
+      };
+      const response = await getCalendars(params);
       if (response) {
         setOriginSked(response.schedules);
       }
     } else if (category === 'GROUP' && groupId) {
-      const response = await getGroupCalendars(
-        'MONTH',
-        Number(groupId),
-        dateToString(selectedDate),
-      );
+      const params: GetGroupCalendarsParams = {
+        calendarType: 'MONTH',
+        groupId,
+        date: dateToString(selectedDate),
+      };
+      const response = await getGroupCalendars(params);
       if (response) {
         setOriginSked(response.schedules);
       }
