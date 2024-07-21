@@ -1,5 +1,17 @@
 import { useCallback, useEffect, useState } from 'react';
-import getCalendars from '@/services/calendar/getCalendars';
+
+import { LScheduleContainer } from './WeeklyCalendar.styled';
+import WeeklyDays from './WeeklyDays';
+import WeeklyHorizontal from './WeeklyHorizontal';
+import WeeklyLSchedules from './WeeklyLSchedules';
+import WeeklySchedules from './WeeklySchedules';
+import WeeklyVertical from './WeeklyVertical';
+import { Chevrons } from '../DatePicker.styled';
+
+import ChevronLeft from '@/assets/icons/chevronLeft.svg';
+import ChevronRight from '@/assets/icons/chevronRight.svg';
+import useLoading from '@/hooks/useLoading';
+import { getCalendars } from '@/services/calendar/getCalendars';
 import getGroupCalendars from '@/services/calendar/getGroupCalendars';
 import useDateStore from '@/stores/DateStore';
 import {
@@ -10,18 +22,6 @@ import {
   isAllday,
 } from '@/utils/DateUtils';
 import { labelFilter } from '@/utils/FilterUtils';
-
-import { LScheduleContainer } from './WeeklyCalendar.styled';
-import WeeklyDays from './WeeklyDays';
-import WeeklyHorizontal from './WeeklyHorizontal';
-import WeeklyVertical from './WeeklyVertical';
-import WeeklySchedules from './WeeklySchedules';
-import WeeklyLSchedules from './WeeklyLSchedules';
-import { Chevrons } from '../DatePicker.styled';
-
-import ChevronRight from '@/assets/icons/chevronRight.svg';
-import ChevronLeft from '@/assets/icons/chevronLeft.svg';
-import useLoading from '@/hooks/useLoading';
 
 export type LongSchedule = {
   schedule: CalendarSchedule;
@@ -39,12 +39,12 @@ type WeeklyProps = {
 };
 
 function WeeklyCalendar({
-  category,
-  groupId,
-  needUpdate,
-  setUpdateFalse,
-  handleSkedClick,
-}: WeeklyProps) {
+                          category,
+                          groupId,
+                          needUpdate,
+                          setUpdateFalse,
+                          handleSkedClick,
+                        }: WeeklyProps) {
   const { canStartLoading, endLoading } = useLoading();
   const { selectedDate, setSelectedDate, selectedLabels } = useDateStore();
   const [firstDay, setFirstDay] = useState<Date | null>(null);
