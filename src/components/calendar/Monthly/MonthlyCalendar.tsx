@@ -23,7 +23,7 @@ type MonthlyProps = {
   groupId?: number;
   needUpdate: boolean;
   setUpdateFalse: () => void;
-  handleSkedClick: (id: number) => void;
+  handleScheduleClick: (id: number) => void;
   goDay: () => void;
 };
 
@@ -32,7 +32,7 @@ function MonthlyCalender({
                            groupId,
                            needUpdate,
                            setUpdateFalse,
-                           handleSkedClick,
+                           handleScheduleClick,
                            goDay,
                          }: MonthlyProps) {
   const createInit = (): Array<DateSchedule> => {
@@ -44,7 +44,7 @@ function MonthlyCalender({
   };
 
   const { selectedDate, setSelectedDate, selectedLabels } = useDateStore();
-  const [originSked, setOriginSked] = useState<Array<CalendarSchedule>>([]);
+  const [originSchedule, setOriginSchedule] = useState<Array<CalendarSchedule>>([]);
   const [monthSchedules, setMonthSchedules] =
     useState<Array<DateSchedule>>(createInit());
   const [firstDay, setFirstDay] = useState<Date | null>(null);
@@ -83,7 +83,7 @@ function MonthlyCalender({
       };
       const response = await getCalendars(params);
       if (response) {
-        setOriginSked(response.schedules);
+        setOriginSchedule(response.schedules);
       }
     } else if (category === 'GROUP' && groupId) {
       const params: GetGroupCalendarsParams = {
@@ -93,7 +93,7 @@ function MonthlyCalender({
       };
       const response = await getGroupCalendars(params);
       if (response) {
-        setOriginSked(response.schedules);
+        setOriginSchedule(response.schedules);
       }
     }
   }, [selectedDate, groupId]);
@@ -102,13 +102,13 @@ function MonthlyCalender({
     updateInfo();
   }, [groupId]);
 
-  const filteredSked = useCallback(() => {
-    if (firstDay && originSked) {
+  const filteredSchedule = useCallback(() => {
+    if (firstDay && originSchedule) {
       const init: Array<DateSchedule> = createInit();
 
-      for (const sked of labelFilter(originSked, selectedLabels)) {
-        let idx = getDateDiff(firstDay, sked.start_date);
-        let period = getDateDiff(sked.start_date, sked.end_date);
+      for (const schedule of labelFilter(originSchedule, selectedLabels)) {
+        let idx = getDateDiff(firstDay, schedule.start_date);
+        let period = getDateDiff(schedule.start_date, schedule.end_date);
         if (idx < 0) {
           period += idx;
           idx = 0;
@@ -127,13 +127,13 @@ function MonthlyCalender({
               }
             }
           }
-          init[idx + p][row!].push(sked);
+          init[idx + p][row!].push(schedule);
         }
       }
 
       setMonthSchedules(init);
     }
-  }, [originSked, selectedLabels]);
+  }, [originSchedule, selectedLabels]);
 
   useEffect(() => {
     const newFirst = new Date(
@@ -157,8 +157,8 @@ function MonthlyCalender({
   }, [needUpdate]);
 
   useEffect(() => {
-    filteredSked();
-  }, [filteredSked]);
+    filteredSchedule();
+  }, [filteredSchedule]);
 
   const renderMonthly = useCallback(() => {
     const calendar: Array<JSX.Element> = [];
@@ -174,7 +174,7 @@ function MonthlyCalender({
         calendar.push(
           <MonthlyDay
             key={i}
-            handleSkedClick={handleSkedClick}
+            handleScheduleClick={handleScheduleClick}
             date={date}
             firstDay={firstDay}
             schedules={monthSchedules[i]}
